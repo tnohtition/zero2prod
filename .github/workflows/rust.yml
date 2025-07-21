@@ -1,0 +1,46 @@
+# Name of your workflow
+name: Rust CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push events for the "main" branch
+  push:
+    branches: [ "main" ]
+  # Triggers the workflow on pull request events targeted at the "main" branch
+  pull_request:
+    branches: [ "main" ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # The "build" job
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # A sequence of tasks that will be executed as part of the job
+    steps:
+      # Step 1: Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Caches dependencies to speed up future builds
+      # This action is highly recommended for Rust projects to avoid re-downloading/re-compiling all crates every time.
+      - name: Cache Cargo dependencies
+        uses: Swatinem/rust-cache@v2
+
+      # Step 3: Check if code is correctly formatted
+      - name: Check formatting
+        run: cargo fmt -- --check
+
+      # Step 4: Run Clippy for linting checks
+      # The "-D warnings" flag treats warnings as errors, failing the build.
+      - name: Run Clippy
+        run: cargo clippy -- -D warnings
+
+      # Step 5: Run tests
+      - name: Run tests
+        run: cargo test --verbose
+
+      # Step 6: Build the project in release mode to ensure it compiles
+      - name: Build release version
+        run: cargo build --release --verbose
