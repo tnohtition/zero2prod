@@ -51,9 +51,11 @@ jobs:
 
       # New Step: Install sqlx-cli to run migrations
       - name: Install sqlx-cli
-        run: cargo install sqlx-cli --no-default-features --features rustls,postgres
+        run: cargo install --version='~0.8.6' sqlx-cli --no-default-features --features rustls,postgres
 
-      # New Step: Run database migrations
+      - name: Create database
+        run: sqlx database create
+
       - name: Run migrations
         run: sqlx migrate run
 
