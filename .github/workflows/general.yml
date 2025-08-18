@@ -22,7 +22,7 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     env:
-      DATABASE_URL: "postgresql://postgres:password@localhost:5432/newsletter"
+      DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/newsletter"
     # Service containers to run alongside the `test` container job
     services:
       postgres:
@@ -30,7 +30,7 @@ jobs:
         image: postgres:17.5
         env:
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: password
+          POSTGRES_PASSWORD: postgres
           POSTGRES_DB: newsletter
         ports:
           - 5432:5432
